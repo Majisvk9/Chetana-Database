@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Member Details Portal</title>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f2f4f7;
+        padding: 20px;
+    }
+    .container {
+        max-width: 900px;
+        margin: auto;
+        background: #ffffff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h2 {
+        text-align: center;
+    }
+    select {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 20px;
+        font-size: 16px;
+    }
+    .details {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+    .details div {
+        background: #f1f1f1;
+        padding: 8px;
+        border-radius: 5px;
+        font-size: 14px;
+    }
+    .photo {
+        grid-column: span 2;
+        text-align: center;
+    }
+    .photo img {
+        max-width: 180px;
+        border-radius: 8px;
+        margin-top: 10px;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>Member Details Portal</h2>
+
+    <select id="memberSelect">
+        <option value="">Select Member Name</option>
+    </select>
+
+    <div id="output" class="details"></div>
+</div>
+
+<script>
+const apiURL = "https://script.google.com/macros/s/AKfycbx3FO5AfT9y2mpK4SKJWUskFCKegpsO8V2V20X5jiFuczi8BnyezyyoUiJMkaYpbPd9/exec";
+
+fetch(apiURL)
+.then(response => response.json())
+.then(data => {
+
+    const select = document.getElementById("memberSelect");
+    const output = document.getElementById("output");
+
+    data.forEach((member, index) => {
+        if (member["Name"]) {
+            let option = document.createElement("option");
+            option.value = index;
+            option.textContent = member["Name"];
+            select.appendChild(option);
+        }
+    });
+
+    select.addEventListener("change", function () {
+        const m = data[this.value];
+        if (!m) return;
+
+        output.innerHTML = `
+            <div><b>Name:</b> ${m["Name"]}</div>
+            <div><b>Guardian Name:</b> ${m["Gurdian Name"]}</div>
+            <div><b>DOB:</b> ${m["DOB"]}</div>
+            <div><b>Gender:</b> ${m["Gender"]}</div>
+            <div><b>Blood Group:</b> ${m["Blood Group"]}</div>
+            <div><b>Religion:</b> ${m["Religion"]}</div>
+            <div><b>Contact No:</b> ${m["Contact No"]}</div>
+            <div><b>Email:</b> ${m["E-Mail Address"]}</div>
+            <div><b>Aadhaar No:</b> ${m["Aadhaar No"]}</div>
+            <div><b>Qualification:</b> ${m["Qualification"]}</div>
+            <div><b>Occupation:</b> ${m["Occupation"]}</div>
+            <div><b>Village:</b> ${m["Address : Village"]}</div>
+            <div><b>Post Office:</b> ${m["Post Office"]}</div>
+            <div><b>Police Station:</b> ${m["Police Station"]}</div>
+            <div><b>District:</b> ${m["District"]}</div>
+            <div><b>Pin Code:</b> ${m["Pin code"]}</div>
+            <div><b>Status:</b> ${m["Status"]}</div>
+            <div><b>Remarks:</b> ${m["Remarks"]}</div>
+            <div class="photo">
+                <b>Member Photo</b><br>
+                <img src="${m["Member Photo"]}" alt="Member Photo">
+            </div>
+        `;
+    });
+
+})
+.catch(err => {
+    alert("Failed to load data");
+    console.error(err);
+});
+</script>
+
+</body>
+</html>
